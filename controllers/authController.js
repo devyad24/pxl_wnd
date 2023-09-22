@@ -1,16 +1,16 @@
-const brypt = require("bcrypt");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Session = require("../models/session");
-const { body, validateResult, check } = require("express-validator");
+const { body, validationResult, check } = require("express-validator");
 const asyncHandler = require("express-async-handler");
 
 // User Registration
 exports.user_registration_post = [
 
-    check('email').isEmail,
-    check('password').isLength({min: 6}),
-    check('name').not().isEmpty(),
+    body('email', "Email is required").isEmail().escape(),
+    body('password', "Password is required.").isLength({min: 6}).escape(),
+    body('name', "Provide a name.").not().isEmpty().escape(),
 
     asyncHandler(async (req, res) => {
     const errors = validationResult(req);
@@ -40,7 +40,7 @@ exports.user_registration_post = [
       await user.save();
 
       // Generate a unique session token
-      const token = jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '24h' });
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '24h' });
 
       // Store the token in the sessions collection
       const session = new Session({
@@ -59,8 +59,8 @@ exports.user_registration_post = [
 
 exports.user_login_post = [
 
-    check('email').isEmail(),
-    check('password').isLength({ min: 6 }),
+    body('email', "Email is required").isEmail().escape(),
+    body('password', "Password is required.").isLength({min: 6}).escape(),
 
     asyncHandler(async (req, res) => {
     const errors = validationResult(req);
@@ -80,7 +80,7 @@ exports.user_login_post = [
       }
 
       // Generate a unique session token
-      const token = jwt.sign({ userId: user._id }, 'your-secret-key', { expiresIn: '24h' });
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: '24h' });
 
       // Store the token in the sessions collection
       const session = new Session({

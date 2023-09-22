@@ -6,7 +6,7 @@ module.exports = async (req, res, next) => {
 
   try {
     // Verify the token and decode the user ID
-    const decoded = jwt.verify(token, 'your-secret-key');
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const user = await User.findOne({ _id: decoded.userId });
 
     if (!user) {
