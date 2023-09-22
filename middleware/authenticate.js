@@ -15,6 +15,7 @@ module.exports = async (req, res, next) => {
 
     req.token = token;
     req.user = user;
+    req.user_id = decoded.userId;
     next();
   } catch (error) {
     res.status(401).json({ error: 'Authentication failed' });

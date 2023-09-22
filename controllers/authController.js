@@ -49,7 +49,7 @@ exports.user_registration_post = [
       });
       await session.save();
 
-      res.json({ token });
+      res.json({ token, message: "Registered Succesffuly" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Registration failed' });
@@ -89,7 +89,7 @@ exports.user_login_post = [
       });
       await session.save();
 
-      res.json({ token });
+      res.json({ token , message: "Login Succesful"});
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Login failed' });
@@ -100,7 +100,7 @@ exports.user_login_post = [
 exports.user_logout_post = asyncHandler( async (req, res, next) => {
     try {
       // Delete the session token from the sessions collection
-      await Session.deleteOne({ userId: req.user._id, token: req.token });
+      await Session.deleteOne({ userId: req.user_id, token: req.token });
       res.json({ message: 'Logout successful' });
     } catch (error) {
       console.error(error);
