@@ -5,6 +5,7 @@ const authRouter = require('./routes/auth');
 const todoRouter = require('./routes/todo');
 const { mainModule } = require("process");
 const dotenv = require("dotenv");
+const authenticate = require('./middleware/authenticate');
 
 
 dotenv.config();
@@ -23,7 +24,7 @@ app.use(express.json());
 app.use(bodyParser.json());
 
 app.use('/auth', authRouter); 
-app.use('/test', todoRouter);
+app.use('/test', todoRouter, authenticate);
 
 app.get('/', function(req, res) {
     res.send("Go to /auth/register or /auth/login");
